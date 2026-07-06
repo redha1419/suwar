@@ -4,6 +4,7 @@ import { photos, albums } from "@/lib/db/schema";
 import { requireOwner } from "@/lib/auth/session";
 import { SelectablePhotoGrid } from "@/components/photo-grid/selectable-photo-grid";
 import { trashPhotos } from "@/lib/photos/actions";
+import { toPhotoCardData } from "@/lib/photos/to-card-data";
 
 export default async function LibraryPage() {
   const session = await requireOwner();
@@ -19,14 +20,7 @@ export default async function LibraryPage() {
   return (
     <div className="flex flex-col gap-6">
       <SelectablePhotoGrid
-        photos={keptPhotos.map((p) => ({
-          id: p.id,
-          originalFilename: p.originalFilename,
-          width: p.width,
-          height: p.height,
-          hasThumb: Boolean(p.thumbKey),
-          processingError: p.processingError,
-        }))}
+        photos={keptPhotos.map(toPhotoCardData)}
         albums={albumRows.map((a) => ({ id: a.id, title: a.title }))}
         actions={[
           { label: "Trash", variant: "danger", onClick: trashPhotos },

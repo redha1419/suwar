@@ -22,7 +22,7 @@ export default async function SharedAlbumPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-light text-neutral-100">
+      <h1 className="text-2xl font-light text-foreground">
         {result.album.title}
       </h1>
       <PublicPhotoGrid

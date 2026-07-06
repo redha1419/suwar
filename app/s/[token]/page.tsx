@@ -43,7 +43,7 @@ export default async function SharePage({
     const { album, photos } = target;
     return (
       <div className="flex flex-col gap-6">
-        <h1 className="text-2xl font-light text-neutral-100">{album.title}</h1>
+        <h1 className="text-2xl font-light text-foreground">{album.title}</h1>
         <PublicPhotoGrid
           token={token}
           photos={photos.map((p) => ({
@@ -59,7 +59,7 @@ export default async function SharePage({
   return (
     <div className="flex flex-col gap-6">
       {target.albums.length === 0 ? (
-        <p className="py-16 text-center text-sm text-neutral-600">
+        <p className="py-16 text-center text-sm text-muted-2">
           No albums yet.
         </p>
       ) : (
@@ -70,7 +70,7 @@ export default async function SharePage({
               href={`/s/${token}/albums/${album.id}`}
               className="group flex flex-col gap-2"
             >
-              <div className="aspect-square overflow-hidden rounded-sm bg-neutral-900">
+              <div className="aspect-square overflow-hidden bg-surface">
                 {cover?.thumbKey && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -81,8 +81,8 @@ export default async function SharePage({
                 )}
               </div>
               <div>
-                <p className="text-sm text-neutral-100">{album.title}</p>
-                <p className="text-xs text-neutral-600">
+                <p className="text-sm text-foreground">{album.title}</p>
+                <p className="text-xs text-muted-2">
                   {count} photo{count === 1 ? "" : "s"}
                 </p>
               </div>

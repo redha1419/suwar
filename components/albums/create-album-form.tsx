@@ -28,12 +28,12 @@ export function CreateAlbumForm() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="New album name…"
-        className="rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 outline-none focus:border-neutral-500"
+        className="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder-muted-2 outline-none focus:border-muted"
       />
       <button
         type="submit"
         disabled={pending || !title.trim()}
-        className="rounded-md bg-neutral-100 px-3 py-2 text-sm font-medium text-black disabled:opacity-50"
+        className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-accent-foreground disabled:opacity-50"
       >
         Create
       </button>

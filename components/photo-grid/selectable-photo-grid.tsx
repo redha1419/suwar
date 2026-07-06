@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PhotoCard, type PhotoCardData } from "./photo-card";
+import { Lightbox } from "./lightbox";
 import { AlbumPicker, type AlbumOption } from "@/components/albums/album-picker";
 import { assignPhotosToAlbum } from "@/lib/photos/actions";
 
@@ -28,6 +29,7 @@ export function SelectablePhotoGrid({
   const [lastIndex, setLastIndex] = useState<number | null>(null);
   const [pending, setPending] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const orderedIds = useMemo(() => photos.map((p) => p.id), [photos]);
 
@@ -69,14 +71,15 @@ export function SelectablePhotoGrid({
   }
 
   async function handleAddToAlbum(albumId: string) {
-    await assignPhotosToAlbum([...selected], albumId);
+    const result = await assignPhotosToAlbum([...selected], albumId);
     setSelected(new Set());
     router.refresh();
+    return result;
   }
 
   if (photos.length === 0) {
     return (
-      <p className="py-16 text-center text-sm text-neutral-600">
+      <p className="py-16 text-center text-sm text-muted-2">
         Nothing here yet.
       </p>
     );
@@ -85,8 +88,8 @@ export function SelectablePhotoGrid({
   return (
     <div className="flex flex-col gap-3">
       {selected.size > 0 && (
-        <div className="sticky top-0 z-10 flex items-center gap-3 rounded-md border border-neutral-800 bg-neutral-950/95 px-4 py-2 backdrop-blur">
-          <span className="text-xs text-neutral-400">
+        <div className="sticky top-0 z-10 flex items-center gap-3 border border-border bg-background/95 px-4 py-2 backdrop-blur">
+          <span className="text-xs text-muted">
             {selected.size} selected
           </span>
           <div className="flex gap-2">
@@ -94,7 +97,7 @@ export function SelectablePhotoGrid({
               <button
                 disabled={pending}
                 onClick={() => setShowPicker(true)}
-                className="rounded-md border border-neutral-700 px-3 py-1 text-xs text-neutral-200 hover:bg-neutral-900 disabled:opacity-50"
+                className="rounded-md bg-accent px-3 py-1 text-xs font-medium text-accent-foreground disabled:opacity-50"
               >
                 Add to Album…
               </button>
@@ -107,7 +110,7 @@ export function SelectablePhotoGrid({
                 className={`rounded-md border px-3 py-1 text-xs disabled:opacity-50 ${
                   action.variant === "danger"
                     ? "border-red-900 text-red-400 hover:bg-red-950"
-                    : "border-neutral-700 text-neutral-200 hover:bg-neutral-900"
+                    : "border-border text-foreground/80 hover:bg-surface"
                 }`}
               >
                 {action.label}
@@ -115,7 +118,7 @@ export function SelectablePhotoGrid({
             ))}
             <button
               onClick={() => setSelected(new Set())}
-              className="rounded-md px-3 py-1 text-xs text-neutral-500 hover:text-neutral-200"
+              className="rounded-md px-3 py-1 text-xs text-muted-2 hover:text-foreground"
             >
               Clear
             </button>
@@ -130,6 +133,7 @@ export function SelectablePhotoGrid({
             photo={photo}
             selected={selected.has(photo.id)}
             onClick={(e) => handleCardClick(index, e)}
+            onExpand={() => setLightboxIndex(index)}
           />
         ))}
       </div>
@@ -139,6 +143,17 @@ export function SelectablePhotoGrid({
           albums={albums}
           onPick={handleAddToAlbum}
           onClose={() => setShowPicker(false)}
+        />
+      )}
+
+      {lightboxIndex !== null && (
+        <Lightbox
+          photos={photos}
+          index={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onNavigate={setLightboxIndex}
+          mediaUrl={(id) => `/api/media/${id}/preview`}
+          detailHref={(id) => `/photo/${id}`}
         />
       )}
     </div>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { photos, albums, rawFiles } from "@/lib/db/schema";
+import { photos, albums, albumPhotos, rawFiles } from "@/lib/db/schema";
 import { requireOwner } from "@/lib/auth/session";
 import { ExifStrip } from "@/components/exif-strip/exif-strip";
 import { PhotoDetailActions } from "@/components/photo-grid/photo-detail-actions";
@@ -19,9 +19,15 @@ export default async function PhotoDetailPage({
   });
   if (!photo) notFound();
 
-  const [rawFile, albumRows] = await Promise.all([
+  const [rawFile, albumRows, currentAlbumRow] = await Promise.all([
     db.query.rawFiles.findFirst({ where: eq(rawFiles.photoId, id) }),
     db.query.albums.findMany({ where: eq(albums.ownerId, session.ownerId!) }),
+    db
+      .select({ id: albums.id, title: albums.title, slug: albums.slug })
+      .from(albumPhotos)
+      .innerJoin(albums, eq(albums.id, albumPhotos.albumId))
+      .where(eq(albumPhotos.photoId, id))
+      .then((rows) => rows[0] ?? null),
   ]);
 
   return (
@@ -48,6 +54,7 @@ export default async function PhotoDetailPage({
           photoId={photo.id}
           filename={photo.originalFilename}
           albums={albumRows.map((a) => ({ id: a.id, title: a.title }))}
+          currentAlbum={currentAlbumRow}
         />
       </div>
 
@@ -60,17 +67,17 @@ export default async function PhotoDetailPage({
         />
       </div>
 
-      <div className="flex gap-4 text-xs text-neutral-500">
+      <div className="flex gap-4 text-xs text-muted">
         <a
           href={`/api/media/${photo.id}/original`}
-          className="uppercase tracking-wider hover:text-neutral-100"
+          className="uppercase tracking-wider hover:text-foreground"
         >
           Download original
         </a>
         {rawFile && (
           <a
             href={`/api/media/raw/${rawFile.id}`}
-            className="uppercase tracking-wider hover:text-neutral-100"
+            className="uppercase tracking-wider hover:text-foreground"
           >
             Download RAW ({rawFile.extension})
           </a>

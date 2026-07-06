@@ -14,12 +14,12 @@ export default async function RawFilesPage() {
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="mb-2 text-xs text-neutral-600">
+      <p className="mb-2 text-xs text-muted-2">
         RAW files with no matching JPEG — download or delete only, they never
         appear in albums.
       </p>
       {unmatched.length === 0 ? (
-        <p className="py-16 text-center text-sm text-neutral-600">
+        <p className="py-16 text-center text-sm text-muted-2">
           No unmatched RAW files.
         </p>
       ) : (

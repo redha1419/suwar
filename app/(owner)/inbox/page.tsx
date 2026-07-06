@@ -6,6 +6,7 @@ import { requireOwner } from "@/lib/auth/session";
 import { UploadDropzone } from "@/components/upload/upload-dropzone";
 import { SelectablePhotoGrid } from "@/components/photo-grid/selectable-photo-grid";
 import { trashPhotos } from "@/lib/photos/actions";
+import { toPhotoCardData } from "@/lib/photos/to-card-data";
 
 export default async function InboxPage() {
   const session = await requireOwner();
@@ -22,27 +23,20 @@ export default async function InboxPage() {
     <div className="flex flex-col gap-6">
       <UploadDropzone />
       <div className="flex items-center justify-between">
-        <p className="text-xs text-neutral-600">
+        <p className="text-xs text-muted-2">
           Select photos, then add them to an album (which keeps them) or trash the rest.
         </p>
         {inboxPhotos.length > 0 && (
           <Link
             href="/inbox/review"
-            className="text-xs uppercase tracking-wider text-neutral-400 hover:text-neutral-100"
+            className="text-xs uppercase tracking-wider text-muted hover:text-foreground"
           >
             Review one-by-one →
           </Link>
         )}
       </div>
       <SelectablePhotoGrid
-        photos={inboxPhotos.map((p) => ({
-          id: p.id,
-          originalFilename: p.originalFilename,
-          width: p.width,
-          height: p.height,
-          hasThumb: Boolean(p.thumbKey),
-          processingError: p.processingError,
-        }))}
+        photos={inboxPhotos.map(toPhotoCardData)}
         albums={albumRows.map((a) => ({ id: a.id, title: a.title }))}
         actions={[
           { label: "Trash", variant: "danger", onClick: trashPhotos },

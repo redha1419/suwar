@@ -42,7 +42,7 @@ export default async function AlbumsPage() {
     <div className="flex flex-col gap-6">
       <CreateAlbumForm />
       {withDetails.length === 0 ? (
-        <p className="py-16 text-center text-sm text-neutral-600">
+        <p className="py-16 text-center text-sm text-muted-2">
           No albums yet — create one, or add photos to one from the Inbox.
         </p>
       ) : (
@@ -53,7 +53,7 @@ export default async function AlbumsPage() {
               href={`/albums/${album.slug}`}
               className="group flex flex-col gap-2"
             >
-              <div className="aspect-square overflow-hidden rounded-sm bg-neutral-900">
+              <div className="aspect-square overflow-hidden bg-surface">
                 {album.cover?.thumbKey && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -64,8 +64,8 @@ export default async function AlbumsPage() {
                 )}
               </div>
               <div>
-                <p className="text-sm text-neutral-100">{album.title}</p>
-                <p className="text-xs text-neutral-600">
+                <p className="text-sm text-foreground">{album.title}</p>
+                <p className="text-xs text-muted-2">
                   {album.count} photo{album.count === 1 ? "" : "s"}
                 </p>
               </div>

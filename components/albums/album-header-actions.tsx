@@ -52,7 +52,7 @@ export function AlbumHeaderActions({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={handleRename}
-          className="rounded-md border border-neutral-800 bg-neutral-950 px-2 py-1 text-2xl font-light text-neutral-100 outline-none focus:border-neutral-500"
+          className="rounded-md border border-border bg-surface px-2 py-1 text-2xl font-light text-foreground outline-none focus:border-muted"
         />
       </form>
     );
@@ -62,7 +62,7 @@ export function AlbumHeaderActions({
     <div className="flex items-center gap-3">
       <h1
         onClick={() => setEditing(true)}
-        className="cursor-text text-2xl font-light text-neutral-100"
+        className="cursor-text text-2xl font-light text-foreground"
       >
         {title}
       </h1>
@@ -75,7 +75,7 @@ export function AlbumHeaderActions({
       <button
         disabled={pending}
         onClick={handleDelete}
-        className="text-xs uppercase tracking-wider text-neutral-600 hover:text-red-400 disabled:opacity-50"
+        className="text-xs uppercase tracking-wider text-muted-2 hover:text-red-400 disabled:opacity-50"
       >
         Delete album
       </button>

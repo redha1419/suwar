@@ -10,7 +10,6 @@ import {
   jsonb,
   index,
   uniqueIndex,
-  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const owners = pgTable("owners", {
@@ -122,19 +121,21 @@ export const albums = pgTable("albums", {
   sortOrder: integer("sort_order").default(0),
 });
 
+// A photo belongs to at most one album — photoId as the primary key (rather
+// than a composite albumId+photoId key) enforces that at the DB level.
 export const albumPhotos = pgTable(
   "album_photos",
   {
+    photoId: uuid("photo_id")
+      .primaryKey()
+      .references(() => photos.id, { onDelete: "cascade" }),
     albumId: uuid("album_id")
       .notNull()
       .references(() => albums.id, { onDelete: "cascade" }),
-    photoId: uuid("photo_id")
-      .notNull()
-      .references(() => photos.id, { onDelete: "cascade" }),
     addedAt: timestamp("added_at").defaultNow().notNull(),
     position: integer("position").default(0),
   },
-  (t) => [primaryKey({ columns: [t.albumId, t.photoId] })]
+  (t) => [index("album_photos_album_id_idx").on(t.albumId)]
 );
 
 export const shareScopeEnum = pgEnum("share_scope", ["photo", "album", "all"]);

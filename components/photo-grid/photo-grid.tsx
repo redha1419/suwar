@@ -3,7 +3,7 @@ import { PhotoCard, type PhotoCardData } from "./photo-card";
 export function PhotoGrid({ photos }: { photos: PhotoCardData[] }) {
   if (photos.length === 0) {
     return (
-      <p className="py-16 text-center text-sm text-neutral-600">
+      <p className="py-16 text-center text-sm text-muted-2">
         Nothing here yet.
       </p>
     );

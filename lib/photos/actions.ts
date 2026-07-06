@@ -14,23 +14,49 @@ function revalidateCommon() {
   revalidatePath("/trash");
 }
 
-export async function assignPhotosToAlbum(photoIds: string[], albumId: string) {
+export interface AssignToAlbumResult {
+  added: number;
+  /** Skipped because the photo already belongs to a different album — a photo can only ever be in one. */
+  blocked: number;
+}
+
+export async function assignPhotosToAlbum(
+  photoIds: string[],
+  albumId: string
+): Promise<AssignToAlbumResult> {
   const session = await requireOwner();
-  if (photoIds.length === 0) return;
+  if (photoIds.length === 0) return { added: 0, blocked: 0 };
 
-  await db
-    .update(photos)
-    .set({ status: "kept" })
-    .where(
-      and(eq(photos.ownerId, session.ownerId!), inArray(photos.id, photoIds))
+  const existing = await db
+    .select({ photoId: albumPhotos.photoId, albumId: albumPhotos.albumId })
+    .from(albumPhotos)
+    .where(inArray(albumPhotos.photoId, photoIds));
+  const existingByPhoto = new Map(existing.map((row) => [row.photoId, row.albumId]));
+
+  const eligibleIds = photoIds.filter((id) => {
+    const currentAlbum = existingByPhoto.get(id);
+    return !currentAlbum || currentAlbum === albumId;
+  });
+  const blocked = photoIds.length - eligibleIds.length;
+  const toInsert = eligibleIds.filter((id) => existingByPhoto.get(id) !== albumId);
+
+  if (eligibleIds.length > 0) {
+    await db
+      .update(photos)
+      .set({ status: "kept" })
+      .where(
+        and(eq(photos.ownerId, session.ownerId!), inArray(photos.id, eligibleIds))
+      );
+  }
+
+  if (toInsert.length > 0) {
+    await db.insert(albumPhotos).values(
+      toInsert.map((photoId) => ({ albumId, photoId }))
     );
-
-  await db
-    .insert(albumPhotos)
-    .values(photoIds.map((photoId) => ({ albumId, photoId })))
-    .onConflictDoNothing();
+  }
 
   revalidateCommon();
+  return { added: toInsert.length, blocked };
 }
 
 export async function removePhotosFromAlbum(photoIds: string[], albumId: string) {

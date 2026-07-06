@@ -42,17 +42,17 @@ export function ShareButton({
 
   if (url) {
     return (
-      <div className="flex items-center gap-2 rounded-md border border-neutral-800 bg-neutral-950 px-2 py-1 text-xs">
-        <span className="max-w-[16rem] truncate text-neutral-400">{url}</span>
+      <div className="flex items-center gap-2 rounded-md border border-border bg-surface px-2 py-1 text-xs">
+        <span className="max-w-[16rem] truncate text-muted">{url}</span>
         <button
           onClick={handleCopy}
-          className="text-neutral-200 hover:text-neutral-100"
+          className="text-foreground hover:text-foreground"
         >
           {copied ? "Copied" : "Copy"}
         </button>
         <button
           onClick={() => setUrl(null)}
-          className="text-neutral-600 hover:text-neutral-300"
+          className="text-muted-2 hover:text-foreground/80"
         >
           ×
         </button>
@@ -66,7 +66,7 @@ export function ShareButton({
       onClick={handleCreate}
       className={
         buttonClassName ??
-        "rounded-md border border-neutral-700 px-3 py-1.5 text-xs text-neutral-200 hover:bg-neutral-900 disabled:opacity-50"
+        "rounded-md border border-border px-3 py-1.5 text-xs text-foreground hover:bg-surface disabled:opacity-50"
       }
     >
       {pending ? "Creating…" : buttonLabel}

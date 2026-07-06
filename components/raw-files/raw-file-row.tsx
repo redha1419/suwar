@@ -30,27 +30,27 @@ export function RawFileRow({
   }
 
   return (
-    <div className="flex items-center justify-between border-b border-neutral-900 py-3 text-sm">
+    <div className="flex items-center justify-between border-b border-border py-3 text-sm">
       <div className="flex items-center gap-3">
-        <span className="rounded bg-neutral-900 px-2 py-0.5 text-xs uppercase text-neutral-500">
+        <span className="rounded bg-surface px-2 py-0.5 text-xs uppercase text-muted">
           {extension}
         </span>
-        <span className="text-neutral-200">{filename}</span>
-        <span className="text-xs text-neutral-600">
+        <span className="text-foreground">{filename}</span>
+        <span className="text-xs text-muted-2">
           {(bytes / 1024 / 1024).toFixed(1)} MB
         </span>
       </div>
       <div className="flex items-center gap-4">
         <a
           href={`/api/media/raw/${id}`}
-          className="text-xs uppercase tracking-wider text-neutral-400 hover:text-neutral-100"
+          className="text-xs uppercase tracking-wider text-muted hover:text-foreground"
         >
           Download
         </a>
         <button
           disabled={pending}
           onClick={handleDelete}
-          className="text-xs uppercase tracking-wider text-neutral-600 hover:text-red-400 disabled:opacity-50"
+          className="text-xs uppercase tracking-wider text-muted-2 hover:text-red-400 disabled:opacity-50"
         >
           Delete
         </button>

@@ -41,7 +41,7 @@ export function ShareLinksTable({ links }: { links: ShareLinkRowData[] }) {
 
   if (links.length === 0) {
     return (
-      <p className="py-8 text-sm text-neutral-600">No share links yet.</p>
+      <p className="py-8 text-sm text-muted-2">No share links yet.</p>
     );
   }
 
@@ -50,24 +50,24 @@ export function ShareLinksTable({ links }: { links: ShareLinkRowData[] }) {
       {links.map((link) => (
         <div
           key={link.id}
-          className="flex items-center justify-between gap-4 border-b border-neutral-900 py-3"
+          className="flex items-center justify-between gap-4 border-b border-border py-3"
         >
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 text-sm">
-              <span className="rounded bg-neutral-900 px-2 py-0.5 text-[10px] uppercase text-neutral-500">
+              <span className="rounded bg-surface px-2 py-0.5 text-[10px] uppercase text-muted">
                 {link.scope}
               </span>
-              <span className="text-neutral-200">
+              <span className="text-foreground">
                 {link.label ?? "Entire library"}
               </span>
               {link.revokedAt && (
                 <span className="text-xs text-red-500">Revoked</span>
               )}
             </div>
-            <p className="max-w-md truncate text-xs text-neutral-600">
+            <p className="max-w-md truncate text-xs text-muted-2">
               {link.url}
             </p>
-            <p className="text-xs text-neutral-700">
+            <p className="text-xs text-muted-2">
               Created {new Date(link.createdAt).toLocaleDateString()} ·{" "}
               {link.viewCount ?? 0} view{link.viewCount === 1 ? "" : "s"}
               {link.lastAccessedAt &&
@@ -78,7 +78,7 @@ export function ShareLinksTable({ links }: { links: ShareLinkRowData[] }) {
             {!link.revokedAt && (
               <button
                 onClick={() => handleCopy(link)}
-                className="rounded-md border border-neutral-700 px-3 py-1 text-xs text-neutral-200 hover:bg-neutral-900"
+                className="rounded-md border border-border px-3 py-1 text-xs text-foreground hover:bg-surface"
               >
                 {copiedId === link.id ? "Copied" : "Copy"}
               </button>

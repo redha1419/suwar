@@ -5,6 +5,7 @@ import { albums, albumPhotos, photos } from "@/lib/db/schema";
 import { requireOwner } from "@/lib/auth/session";
 import { AlbumHeaderActions } from "@/components/albums/album-header-actions";
 import { AlbumPhotoGrid } from "@/components/albums/album-photo-grid";
+import { toPhotoCardData } from "@/lib/photos/to-card-data";
 
 export default async function AlbumDetailPage({
   params,
@@ -36,14 +37,7 @@ export default async function AlbumDetailPage({
       <AlbumPhotoGrid
         albumId={album.id}
         albums={allAlbums.map((a) => ({ id: a.id, title: a.title }))}
-        photos={rows.map(({ photo: p }) => ({
-          id: p.id,
-          originalFilename: p.originalFilename,
-          width: p.width,
-          height: p.height,
-          hasThumb: Boolean(p.thumbKey),
-          processingError: p.processingError,
-        }))}
+        photos={rows.map(({ photo }) => toPhotoCardData(photo))}
       />
     </div>
   );

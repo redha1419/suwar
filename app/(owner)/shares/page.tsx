@@ -21,7 +21,7 @@ export default async function SharesPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-neutral-600">
+        <p className="text-xs text-muted-2">
           Anyone with a link can view — no account needed. Revoke a link to
           cut off access immediately.
         </p>

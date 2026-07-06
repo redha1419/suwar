@@ -19,7 +19,7 @@ export function LoginForm() {
         placeholder="Email"
         autoComplete="username"
         required
-        className="rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 outline-none focus:border-neutral-500"
+        className="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder-muted-2 outline-none focus:border-muted"
       />
       <input
         name="password"
@@ -27,15 +27,15 @@ export function LoginForm() {
         placeholder="Password"
         autoComplete="current-password"
         required
-        className="rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 outline-none focus:border-neutral-500"
+        className="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder-muted-2 outline-none focus:border-muted"
       />
       {state.error && (
-        <p className="text-sm text-neutral-400">{state.error}</p>
+        <p className="text-sm text-muted">{state.error}</p>
       )}
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-md bg-neutral-100 px-3 py-2 text-sm font-medium text-black transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="mt-2 rounded-md bg-accent px-3 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {pending ? "Signing in…" : "Sign in"}
       </button>

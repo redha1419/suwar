@@ -135,8 +135,8 @@ export function UploadDropzone() {
       onClick={() => inputRef.current?.click()}
       className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-6 py-10 text-center transition-colors ${
         isDragging
-          ? "border-neutral-400 bg-neutral-900"
-          : "border-neutral-800 hover:border-neutral-600"
+          ? "border-muted bg-surface"
+          : "border-border hover:border-muted-2"
       }`}
     >
       <input
@@ -147,19 +147,19 @@ export function UploadDropzone() {
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
       />
-      <p className="text-sm text-neutral-300">
+      <p className="text-sm text-foreground/80">
         {busy ? "Uploading…" : "Drag photos here, or click to select"}
       </p>
-      <p className="text-xs text-neutral-600">
+      <p className="text-xs text-muted-2">
         JPEG, HEIC, TIFF, PNG — RAW files upload alongside a same-named JPEG
       </p>
       {progress.length > 0 && (
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted">
           {progress.length} file{progress.length === 1 ? "" : "s"}{" "}
           {progress[0]?.status}…
         </p>
       )}
-      {summary && <p className="text-xs text-neutral-400">{summary}</p>}
+      {summary && <p className="text-xs text-muted">{summary}</p>}
     </div>
   );
 }

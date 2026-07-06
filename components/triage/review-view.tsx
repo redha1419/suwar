@@ -9,6 +9,7 @@ import {
   keepPhotos,
   returnPhotosToInbox,
   trashPhotos,
+  type AssignToAlbumResult,
 } from "@/lib/photos/actions";
 
 export interface ReviewPhoto extends ExifStripData {
@@ -42,6 +43,7 @@ export function ReviewView({
   const [assignedByPhoto, setAssignedByPhoto] = useState<Record<string, Set<string>>>({});
   const [showPicker, setShowPicker] = useState(false);
   const [pending, setPending] = useState(false);
+  const [blockedNotice, setBlockedNotice] = useState<string | null>(null);
 
   const current = queue[index] ?? null;
   const quickAlbums = useMemo(() => albums.slice(0, 9), [albums]);
@@ -77,16 +79,23 @@ export function ReviewView({
   }, [current, index, pending, queue.length]);
 
   const doAssignAlbum = useCallback(
-    async (albumId: string) => {
-      if (!current) return;
+    async (albumId: string): Promise<AssignToAlbumResult> => {
+      if (!current) return { added: 0, blocked: 0 };
       const photoId = current.id;
-      await assignPhotosToAlbum([photoId], albumId);
-      setAssignedByPhoto((prev) => {
-        const next = { ...prev };
-        next[photoId] = new Set(prev[photoId] ?? []);
-        next[photoId].add(albumId);
-        return next;
-      });
+      const result = await assignPhotosToAlbum([photoId], albumId);
+      if (result.added > 0) {
+        setAssignedByPhoto((prev) => {
+          const next = { ...prev };
+          next[photoId] = new Set(prev[photoId] ?? []);
+          next[photoId].add(albumId);
+          return next;
+        });
+      }
+      if (result.blocked > 0) {
+        setBlockedNotice("Already in another album — remove it from that album first.");
+        setTimeout(() => setBlockedNotice(null), 3000);
+      }
+      return result;
     },
     [current]
   );
@@ -140,11 +149,11 @@ export function ReviewView({
   if (queue.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-24 text-center">
-        <p className="text-sm text-neutral-400">Inbox is empty.</p>
+        <p className="text-sm text-muted">Inbox is empty.</p>
         {history.length > 0 && (
           <button
             onClick={doUndo}
-            className="text-xs text-neutral-600 underline hover:text-neutral-200"
+            className="text-xs text-muted-2 underline hover:text-foreground"
           >
             Undo last action
           </button>
@@ -157,7 +166,7 @@ export function ReviewView({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between text-xs text-neutral-500">
+      <div className="flex items-center justify-between text-xs text-muted">
         <span>
           {index + 1} / {queue.length}
         </span>
@@ -175,13 +184,17 @@ export function ReviewView({
             className="max-h-[70vh] max-w-full object-contain"
           />
         ) : (
-          <div className="flex h-[50vh] w-full items-center justify-center text-sm text-neutral-600">
+          <div className="flex h-[50vh] w-full items-center justify-center text-sm text-muted-2">
             Processing…
           </div>
         )}
       </div>
 
       <ExifStrip data={current!} />
+
+      {blockedNotice && (
+        <p className="text-xs text-muted">{blockedNotice}</p>
+      )}
 
       {quickAlbums.length > 0 && (
         <div className="flex flex-wrap gap-2">
@@ -192,8 +205,8 @@ export function ReviewView({
               onClick={() => doAssignAlbum(album.id)}
               className={`rounded-full border px-3 py-1 text-xs disabled:opacity-50 ${
                 assignedIds.has(album.id)
-                  ? "border-neutral-100 bg-neutral-100 text-black"
-                  : "border-neutral-700 text-neutral-300 hover:bg-neutral-900"
+                  ? "border-accent bg-accent text-accent-foreground"
+                  : "border-border text-foreground/80 hover:bg-surface"
               }`}
             >
               {i + 1}. {album.title}
@@ -206,7 +219,7 @@ export function ReviewView({
         <button
           disabled={pending}
           onClick={doKeep}
-          className="rounded-md bg-neutral-100 px-4 py-2 text-sm font-medium text-black disabled:opacity-50"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground disabled:opacity-50"
         >
           Keep
         </button>
@@ -219,14 +232,14 @@ export function ReviewView({
         </button>
         <button
           onClick={() => setShowPicker(true)}
-          className="rounded-md border border-neutral-700 px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-900"
+          className="rounded-md border border-border px-4 py-2 text-sm text-foreground hover:bg-surface"
         >
           Add to Album…
         </button>
         {history.length > 0 && (
           <button
             onClick={doUndo}
-            className="ml-auto rounded-md px-4 py-2 text-sm text-neutral-500 hover:text-neutral-200"
+            className="ml-auto rounded-md px-4 py-2 text-sm text-muted hover:text-foreground"
           >
             Undo {history[history.length - 1].type}
           </button>

@@ -37,7 +37,7 @@ export function ExifStrip({ data }: { data: ExifStripData }) {
   if (parts.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-neutral-500">
+    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
       {parts.map((part, i) => (
         <span key={i}>{part}</span>
       ))}

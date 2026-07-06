@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
+/*
+ * Suwar is always dark — an editorial, gallery-like shell so photos (even
+ * color ones) are the only strong color on screen. One warm accent is used
+ * sparingly for the single primary action per view; everything else in the
+ * UI chrome stays grayscale.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0b;
+  --surface: #131314;
+  --foreground: #f2f0ec;
+  --muted: #8a8a8a;
+  --muted-2: #5c5c5c;
+  --border: #232323;
+  --accent: #d3a066;
+  --accent-foreground: #1a1208;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-fraunces);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
