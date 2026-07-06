@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local dev storage (stand-in for R2 when no credentials are configured)
+/.data/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
