@@ -11,6 +11,7 @@ function revalidateCommon() {
   revalidatePath("/inbox");
   revalidatePath("/library");
   revalidatePath("/albums");
+  revalidatePath("/albums/[slug]", "page");
   revalidatePath("/trash");
 }
 
@@ -104,6 +105,11 @@ export async function trashPhotos(photoIds: string[]) {
     .where(
       and(eq(photos.ownerId, session.ownerId!), inArray(photos.id, photoIds))
     );
+  // Trashing removes the photo from whatever album it was in — a trashed
+  // photo shouldn't linger in an album's grid (or count toward it), and this
+  // also frees the "one album per photo" slot if it's ever restored and
+  // added elsewhere.
+  await db.delete(albumPhotos).where(inArray(albumPhotos.photoId, photoIds));
   revalidateCommon();
 }
 
