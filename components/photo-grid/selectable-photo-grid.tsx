@@ -154,6 +154,7 @@ export function SelectablePhotoGrid({
           onNavigate={setLightboxIndex}
           mediaUrl={(id) => `/api/media/${id}/preview`}
           detailHref={(id) => `/photo/${id}`}
+          downloadUrl={(id) => `/api/media/${id}/original?download=1`}
         />
       )}
     </div>

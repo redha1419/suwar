@@ -16,6 +16,7 @@ interface LightboxProps {
   onNavigate: (index: number) => void;
   mediaUrl: (photoId: string) => string;
   detailHref?: (photoId: string) => string;
+  downloadUrl?: (photoId: string) => string;
 }
 
 export function Lightbox({
@@ -25,6 +26,7 @@ export function Lightbox({
   onNavigate,
   mediaUrl,
   detailHref,
+  downloadUrl,
 }: LightboxProps) {
   const photo = photos[index];
 
@@ -92,6 +94,14 @@ export function Lightbox({
         className="mt-4 flex max-w-[92vw] items-center gap-4"
       >
         <ExifStrip data={photo} />
+        {downloadUrl && (
+          <a
+            href={downloadUrl(photo.id)}
+            className="shrink-0 text-xs uppercase tracking-wider text-muted transition-colors hover:text-foreground"
+          >
+            Download
+          </a>
+        )}
         {detailHref && (
           <Link
             href={detailHref(photo.id)}

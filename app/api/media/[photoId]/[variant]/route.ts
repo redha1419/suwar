@@ -9,9 +9,9 @@ import { canTokenAccessPhoto } from "@/lib/share/resolve";
 const VARIANTS = ["thumb", "medium", "preview", "original"] as const;
 type Variant = (typeof VARIANTS)[number];
 
-// Full-res originals carry embedded GPS/EXIF and aren't needed to just view a
-// shared photo, so they stay owner-only even with a valid share token.
-const SHAREABLE_VARIANTS = new Set<Variant>(["thumb", "medium", "preview"]);
+// All variants (including the original) are shareable — the owner explicitly
+// chose full-quality downloads for shared photos over stripping GPS/EXIF.
+const SHAREABLE_VARIANTS = new Set<Variant>(["thumb", "medium", "preview", "original"]);
 
 const CONTENT_TYPES: Record<string, string> = {
   jpeg: "image/jpeg",
@@ -34,6 +34,7 @@ export async function GET(
 
   const ownerId = await getOwnerIdForApi();
   const shareToken = req.nextUrl.searchParams.get("t");
+  const download = req.nextUrl.searchParams.get("download") === "1";
 
   let authorized = false;
   if (ownerId) {
@@ -79,8 +80,12 @@ export async function GET(
     return NextResponse.json({ error: "Variant not available" }, { status: 404 });
   }
 
+  const contentDisposition = download
+    ? `attachment; filename="${photo.originalFilename.replace(/"/g, "")}"`
+    : undefined;
+
   if (usingR2) {
-    const url = await storage.getPresignedDownloadUrl(key);
+    const url = await storage.getPresignedDownloadUrl(key, 3600, contentDisposition);
     return NextResponse.redirect(url);
   }
 
@@ -90,6 +95,7 @@ export async function GET(
       headers: {
         "content-type": contentType,
         "cache-control": "private, max-age=31536000, immutable",
+        ...(contentDisposition ? { "content-disposition": contentDisposition } : {}),
       },
     });
   } catch {

@@ -22,9 +22,17 @@ export default async function SharedAlbumPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-light text-foreground">
-        {result.album.title}
-      </h1>
+      <div className="flex items-center gap-4">
+        <h1 className="text-2xl font-light text-foreground">
+          {result.album.title}
+        </h1>
+        <a
+          href={`/api/share/${token}/zip?albumId=${albumId}`}
+          className="text-xs uppercase tracking-wider text-muted hover:text-foreground"
+        >
+          Download All
+        </a>
+      </div>
       <PublicPhotoGrid
         token={token}
         photos={result.photos.map((p) => ({ ...p, hasThumb: Boolean(p.thumbKey) }))}

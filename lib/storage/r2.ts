@@ -39,8 +39,12 @@ export const r2Provider: StorageProvider = {
     return getSignedUrl(client(), cmd, { expiresIn: expiresInSec });
   },
 
-  async getPresignedDownloadUrl(key, expiresInSec = 3600) {
-    const cmd = new GetObjectCommand({ Bucket: bucket(), Key: key });
+  async getPresignedDownloadUrl(key, expiresInSec = 3600, responseContentDisposition) {
+    const cmd = new GetObjectCommand({
+      Bucket: bucket(),
+      Key: key,
+      ResponseContentDisposition: responseContentDisposition,
+    });
     return getSignedUrl(client(), cmd, { expiresIn: expiresInSec });
   },
 

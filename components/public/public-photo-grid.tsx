@@ -59,6 +59,7 @@ export function PublicPhotoGrid({
           onClose={() => setOpenIndex(null)}
           onNavigate={setOpenIndex}
           mediaUrl={(id) => `/api/media/${id}/preview?t=${token}`}
+          downloadUrl={(id) => `/api/media/${id}/original?download=1&t=${token}`}
         />
       )}
     </>
