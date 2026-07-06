@@ -15,6 +15,10 @@ import {
 } from "@/lib/pairing/match-raw";
 import { baseFilename, extensionOf } from "@/lib/media/file-classify";
 
+// Photos are processed sequentially and large batches can take a while —
+// use the highest duration the Hobby plan allows rather than the 10s default.
+export const maxDuration = 60;
+
 const bodySchema = z
   .array(
     z.object({

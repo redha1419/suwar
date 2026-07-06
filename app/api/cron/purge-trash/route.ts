@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { purgeExpiredTrash } from "@/lib/jobs/purge-trash";
 
+export const maxDuration = 60;
+
 /**
  * Hit by a scheduler (Vercel Cron, or any external cron once deployed) — not
  * by the browser. Protected by a shared secret rather than the owner session

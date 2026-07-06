@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# wrangler (Cloudflare CLI) local state
+.wrangler
+
 # local dev storage (stand-in for R2 when no credentials are configured)
 /.data/
 
