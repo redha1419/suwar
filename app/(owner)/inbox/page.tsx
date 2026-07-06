@@ -36,7 +36,7 @@ export default async function InboxPage() {
         )}
       </div>
       <SelectablePhotoGrid
-        photos={inboxPhotos.map(toPhotoCardData)}
+        photos={inboxPhotos.map((p) => toPhotoCardData(p))}
         albums={albumRows.map((a) => ({ id: a.id, title: a.title }))}
         actions={[
           { label: "Trash", variant: "danger", onClick: trashPhotos },

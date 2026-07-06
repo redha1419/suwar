@@ -20,7 +20,7 @@ export default async function TrashPage() {
         Trashed photos are permanently deleted after 30 days.
       </p>
       <SelectablePhotoGrid
-        photos={trashedPhotos.map(toPhotoCardData)}
+        photos={trashedPhotos.map((p) => toPhotoCardData(p))}
         actions={[
           { label: "Restore", onClick: restorePhotos },
           { label: "Delete Forever", variant: "danger", onClick: hardDeletePhotos },

@@ -9,6 +9,7 @@ export interface PhotoCardData extends ExifStripData {
   hasThumb: boolean;
   processingError: string | null;
   blurhash: string | null;
+  albumTitle?: string | null;
 }
 
 interface PhotoCardProps {
@@ -53,13 +54,18 @@ export function PhotoCard({ photo, selected, onClick, onExpand }: PhotoCardProps
           }`}
         />
       )}
+      {photo.albumTitle && (
+        <div className="absolute bottom-2 left-2 max-w-[calc(100%-2rem)] truncate rounded bg-black/50 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/90 backdrop-blur">
+          {photo.albumTitle}
+        </div>
+      )}
       {photo.hasThumb && onExpand && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             onExpand();
           }}
-          className="absolute bottom-2 left-2 rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100"
+          className="absolute bottom-2 right-2 rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100"
         >
           View
         </button>

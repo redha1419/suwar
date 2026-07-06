@@ -3,7 +3,10 @@ import type { PhotoCardData } from "@/components/photo-grid/photo-card";
 
 type PhotoRow = typeof photos.$inferSelect;
 
-export function toPhotoCardData(p: PhotoRow): PhotoCardData {
+export function toPhotoCardData(
+  p: PhotoRow,
+  albumTitle?: string | null
+): PhotoCardData {
   return {
     id: p.id,
     originalFilename: p.originalFilename,
@@ -12,6 +15,7 @@ export function toPhotoCardData(p: PhotoRow): PhotoCardData {
     hasThumb: Boolean(p.thumbKey),
     processingError: p.processingError,
     blurhash: p.blurhash,
+    albumTitle: albumTitle ?? null,
     takenAt: p.takenAt,
     manualTakenAt: p.manualTakenAt,
     cameraMake: p.cameraMake,
