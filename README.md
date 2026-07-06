@@ -57,15 +57,18 @@ npm run dev
 
 ## Storage: local disk vs. R2
 
-There's no Cloudflare R2 bucket set up yet, so photo storage currently falls
-back to a local-disk stand-in (`lib/storage/local.ts`) that lives at
+Production (suwar-bay.vercel.app) uses a real Cloudflare R2 bucket. Local dev
+intentionally leaves `R2_ACCOUNT_ID` blank in `.env.local` so it falls back
+to a local-disk stand-in (`lib/storage/local.ts`) that lives at
 `.data/storage/` (gitignored) and implements the exact same `StorageProvider`
-interface R2 will use. Everything — upload, thumbnails, RAW pairing,
-sharing — works fully today on local disk.
+interface — this keeps local test uploads out of the real production bucket.
+Everything — upload, thumbnails, RAW pairing, sharing — works fully on local
+disk with no cloud account needed.
 
-To switch to real R2 later: create a bucket, fill in the four `R2_*`
-variables in `.env.local`, restart the server. `lib/storage/index.ts` picks
-R2 automatically once `R2_ACCOUNT_ID` is set — no code changes needed.
+To test against real R2 from local dev, uncomment the credentials already
+commented out below the blank `R2_*` lines in `.env.local` (same account/
+bucket as production — `lib/storage/index.ts` picks R2 automatically once
+`R2_ACCOUNT_ID` is set, no code changes needed).
 
 ## Feature tour
 
